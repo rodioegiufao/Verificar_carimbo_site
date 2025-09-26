@@ -1,5 +1,5 @@
 // Configurações fixas do sistema - Baseado no código Python
-const ENGENHEIROS_CREAS_FIXOS = {
+window.ENGENHEIROS_CREAS_FIXOS = {
     "RODRIGO DAMASCENO NASCIMENTO": ["0920192912", "092019291-2"],
     "JÂNIO RIBEIRO LOPES": ["0912111810", "091211181-0"],
     "FLAVIO SORDI": ["2201136580"],
@@ -7,7 +7,7 @@ const ENGENHEIROS_CREAS_FIXOS = {
     "SALOMÃO": ["0401863549", "040186354-9"]
 };
 
-const MAPEAMENTO_PROJETOS = {
+window.MAPEAMENTO_PROJETOS = {
     "ECX": "PROJETO ELÉTRICO DE BAIXA",
     "ILUX": "PROJETO DE ILUMINAÇÃO EXTERNA",
     "CFTV": "PROJETO DE CFTV",
@@ -40,7 +40,7 @@ const MAPEAMENTO_PROJETOS = {
     "EXA": "PROJETO DE EXAUSTÃO"
 };
 
-const PALAVRAS_CHAVE_PADRAO = [
+window.PALAVRAS_CHAVE_PADRAO = [
     "IPER",
     "CONSTRUÇÃO DA SEDE DO INSTITUTO DE PREVIDÊNCIA DO ESTADO",
     "DE RORAIMA - IPER",
@@ -60,11 +60,17 @@ const PALAVRAS_CHAVE_PADRAO = [
 ];
 
 // Criar lista FIXA de palavras-chave dos engenheiros (sempre serão pesquisadas)
-const PALAVRAS_CHAVE_ENGENHEIROS = (() => {
+window.PALAVRAS_CHAVE_ENGENHEIROS = (() => {
     const palavras = [];
-    for (const [engenheiro, creas] of Object.entries(ENGENHEIROS_CREAS_FIXOS)) {
+    for (const [engenheiro, creas] of Object.entries(window.ENGENHEIROS_CREAS_FIXOS)) {
         palavras.push(engenheiro);
         palavras.push(...creas);
     }
     return palavras;
 })();
+
+console.log('✅ Configurações carregadas:', {
+    engenheiros: Object.keys(window.ENGENHEIROS_CREAS_FIXOS).length,
+    projetos: Object.keys(window.MAPEAMENTO_PROJETOS).length,
+    palavrasChave: window.PALAVRAS_CHAVE_ENGENHEIROS.length
+});
