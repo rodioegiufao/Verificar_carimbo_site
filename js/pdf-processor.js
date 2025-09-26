@@ -2,70 +2,97 @@
 class PDFProcessor {
     constructor() {
         this.pdfjsLib = window['pdfjsLib'];
+        // Configurar o worker se não estiver configurado
+        if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
     }
 
-    // Função para extrair o número da prancha do nome do arquivo - Baseado em extrair_numero_prancha
+    // CORREÇÃO: Adicionar validação de arquivo
+    validarArquivoPDF(file) {
+        if (!file) {
+            throw new Error('Arquivo não selecionado');
+        }
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+            throw new Error('O arquivo não é um PDF válido');
+        }
+        return true;
+    }
+
+    // Função para extrair o número da prancha do nome do arquivo
     extrairNumeroPrancha(nomeArquivo) {
-        // Remove a extensão e possíveis sufixos como "_assinado"
-        const nomeSemExt = nomeArquivo.replace(/\.pdf$/, '').replace('_assinado', '');
-        
-        // Procura por padrões como _01_07 ou -01-07 no nome
-        const padroes = [
-            /[_\-](\d{2})[_\-](\d{2})(?:\..*)?$/,
-            /[_\-](\d{2})[_\-](\d{3})(?:\..*)?$/,
-            /[_\-](\d{3})[_\-](\d{3})(?:\..*)?$/
-        ];
-        
-        for (const padrao of padroes) {
-            const correspondencia = nomeSemExt.match(padrao);
-            if (correspondencia) {
-                return `${correspondencia[1]} ${correspondencia[2]}`;
+        try {
+            // Remove a extensão e possíveis sufixos como "_assinado"
+            const nomeSemExt = nomeArquivo.replace(/\.pdf$/i, '').replace(/_assinado/i, '');
+            
+            // Procura por padrões como _01_07 ou -01-07 no nome
+            const padroes = [
+                /[_\-](\d{2})[_\-](\d{2})/,
+                /[_\-](\d{2})[_\-](\d{3})/,
+                /[_\-](\d{3})[_\-](\d{3})/
+            ];
+            
+            for (const padrao of padroes) {
+                const correspondencia = nomeSemExt.match(padrao);
+                if (correspondencia) {
+                    return `${correspondencia[1]} ${correspondencia[2]}`;
+                }
             }
+        } catch (error) {
+            console.error('Erro ao extrair número da prancha:', error);
         }
         
         return null;
     }
 
-    // Função para verificar se o arquivo está assinado pelo nome - Baseado em verificar_assinatura_nome
+    // Função para verificar se o arquivo está assinado pelo nome
     verificarAssinaturaNome(nomeArquivo) {
         return nomeArquivo.toLowerCase().includes('assinado');
     }
 
-    // Função para extrair o código do projeto do nome do arquivo - Baseado em extrair_codigo_projeto
+    // Função para extrair o código do projeto do nome do arquivo
     extrairCodigoProjeto(nomeArquivo) {
-        const padrao = /PRJ-([A-Z]+)-/;
-        const correspondencia = nomeArquivo.match(padrao);
-        return correspondencia ? correspondencia[1] : null;
+        try {
+            const padrao = /PRJ-([A-Z]+)-/i;
+            const correspondencia = nomeArquivo.match(padrao);
+            return correspondencia ? correspondencia[1] : null;
+        } catch (error) {
+            console.error('Erro ao extrair código do projeto:', error);
+            return null;
+        }
     }
 
-    // Processar arquivo PDF - Baseado no processamento principal do Python
+    // CORREÇÃO: Processar arquivo PDF com melhor tratamento de erro
     async processarPDF(file, palavrasChave, opcoes) {
-        const {
-            checkFilename = true,
-            checkSheetNumber = true,
-            checkProjeto = true
-        } = opcoes;
-
-        // Extrair informações do nome do arquivo
-        const nomeArquivo = file.name.replace('.pdf', '');
-        const assinadoPeloNome = this.verificarAssinaturaNome(file.name);
-        const nomeSemAssinado = nomeArquivo.replace('_assinado', '');
-        const numeroPrancha = this.extrairNumeroPrancha(nomeArquivo);
-        const codigoProjeto = this.extrairCodigoProjeto(file.name);
-        const descricaoProjeto = MAPEAMENTO_PROJETOS[codigoProjeto] || 'Desconhecido';
-
-        // Inicializar resultados - Baseado na estrutura do Python
-        const dadosCarimbo = [];
-        let nomeArquivoEncontrado = false;
-        let pranchaEncontrada = false;
-        let projetoEncontrado = false;
-
         try {
-            // Carregar PDF usando pdf.js - Similar ao PyPDF2
+            // Validar arquivo
+            this.validarArquivoPDF(file);
+
+            const {
+                checkFilename = true,
+                checkSheetNumber = true,
+                checkProjeto = true
+            } = opcoes;
+
+            // Extrair informações do nome do arquivo
+            const nomeArquivo = file.name.replace(/\.pdf$/i, '');
+            const assinadoPeloNome = this.verificarAssinaturaNome(file.name);
+            const nomeSemAssinado = nomeArquivo.replace(/_assinado/i, '');
+            const numeroPrancha = this.extrairNumeroPrancha(file.name);
+            const codigoProjeto = this.extrairCodigoProjeto(file.name);
+            const descricaoProjeto = window.MAPEAMENTO_PROJETOS[codigoProjeto] || 'Desconhecido';
+
+            // Inicializar resultados
+            const dadosCarimbo = [];
+            let nomeArquivoEncontrado = false;
+            let pranchaEncontrada = false;
+            let projetoEncontrado = false;
+
+            // Carregar PDF usando pdf.js
             const arrayBuffer = await file.arrayBuffer();
             const pdf = await this.pdfjsLib.getDocument(arrayBuffer).promise;
             
-            // Processar cada página - Similar ao loop de páginas do Python
+            // Processar cada página
             for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                 const page = await pdf.getPage(pageNum);
                 const textContent = await page.getTextContent();
@@ -96,9 +123,11 @@ class PDFProcessor {
                 }
                 
                 // Verificar palavras-chave FIXAS dos engenheiros
-                for (const palavra of PALAVRAS_CHAVE_ENGENHEIROS) {
-                    if (textoExtraido.includes(palavra) && !dadosCarimbo.includes(palavra)) {
-                        dadosCarimbo.push(palavra);
+                if (window.PALAVRAS_CHAVE_ENGENHEIROS) {
+                    for (const palavra of window.PALAVRAS_CHAVE_ENGENHEIROS) {
+                        if (textoExtraido.includes(palavra) && !dadosCarimbo.includes(palavra)) {
+                            dadosCarimbo.push(palavra);
+                        }
                     }
                 }
                 
@@ -109,42 +138,55 @@ class PDFProcessor {
                     }
                 }
             }
+
+            // Retornar estrutura idêntica ao Python
+            return {
+                dados_carimbo: dadosCarimbo,
+                nome_arquivo_encontrado: nomeArquivoEncontrado,
+                prancha_encontrada: pranchaEncontrada,
+                assinado_pelo_nome: assinadoPeloNome,
+                projeto_encontrado: projetoEncontrado,
+                codigo_projeto: codigoProjeto,
+                descricao_projeto: descricaoProjeto,
+                numero_prancha: numeroPrancha,
+                nome_arquivo: nomeArquivo
+            };
+
         } catch (error) {
+            console.error(`Erro ao processar PDF ${file.name}:`, error);
             throw new Error(`Erro ao processar PDF ${file.name}: ${error.message}`);
         }
-
-        // Retornar estrutura idêntica ao Python
-        return {
-            dados_carimbo: dadosCarimbo,
-            nome_arquivo_encontrado: nomeArquivoEncontrado,
-            prancha_encontrada: pranchaEncontrada,
-            assinado_pelo_nome: assinadoPeloNome,
-            projeto_encontrado: projetoEncontrado,
-            codigo_projeto: codigoProjeto,
-            descricao_projeto: descricaoProjeto,
-            numero_prancha: numeroPrancha,
-            nome_arquivo: nomeArquivo
-        };
     }
 
-    // Processar múltiplos PDFs - Similar ao loop principal do Python
+    // CORREÇÃO: Processar múltiplos PDFs com melhor tratamento
     async processarMultiplosPDFs(files, palavrasChaveAdicionais, opcoes, onProgress) {
         const resultados = {};
-        const todasPalavrasChave = [...PALAVRAS_CHAVE_ENGENHEIROS, ...palavrasChaveAdicionais];
+        
+        // Verificar se há arquivos
+        if (!files || files.length === 0) {
+            throw new Error('Nenhum arquivo PDF selecionado');
+        }
+
+        const todasPalavrasChave = [
+            ...(window.PALAVRAS_CHAVE_ENGENHEIROS || []), 
+            ...palavrasChaveAdicionais
+        ];
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             
-            // Chamar callback de progresso - Similar à barra de progresso do Streamlit
+            // Chamar callback de progresso
             if (onProgress) {
                 onProgress(i, files.length, file.name);
             }
 
             try {
                 resultados[file.name] = await this.processarPDF(file, todasPalavrasChave, opcoes);
+                console.log(`✅ PDF processado: ${file.name}`);
             } catch (error) {
-                console.error(error);
-                // Manter estrutura similar ao tratamento de erro do Python
+                console.error(`❌ Erro no PDF ${file.name}:`, error);
+                
+                // Estrutura de erro consistente
                 resultados[file.name] = {
                     error: error.message,
                     dados_carimbo: [],
@@ -155,7 +197,7 @@ class PDFProcessor {
                     codigo_projeto: null,
                     descricao_projeto: 'Erro no processamento',
                     numero_prancha: null,
-                    nome_arquivo: file.name.replace('.pdf', '')
+                    nome_arquivo: file.name.replace(/\.pdf$/i, '')
                 };
             }
 
