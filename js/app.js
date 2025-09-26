@@ -1,6 +1,7 @@
-// Aplicação Principal - Foco na correção das abas
+// js/app.js - Aplicação Principal (CORRIGIDO)
 class PDFAnalyzerApp {
     constructor() {
+        console.log('📄 Criando PDFAnalyzerApp...');
         this.pdfProcessor = new PDFProcessor();
         this.excelGenerator = new ExcelGenerator();
         this.uploadedFiles = [];
@@ -9,6 +10,7 @@ class PDFAnalyzerApp {
     }
 
     init() {
+        console.log('🔧 Inicializando aplicação...');
         this.setupEventListeners();
         this.loadDefaultKeywords();
         this.populateStaticData();
@@ -16,32 +18,44 @@ class PDFAnalyzerApp {
         
         // Garantir que a aba correta esteja visível
         this.showTab('analisador');
+        console.log('✅ Aplicação inicializada com sucesso');
     }
 
     setupEventListeners() {
-        // Configurar abas - CORREÇÃO PRINCIPAL
+        console.log('🔗 Configurando event listeners...');
+        
+        // Configurar abas
         this.setupTabs();
         
         // Configurar upload de arquivos
         this.setupFileUploadHandlers();
+        
+        // Configurar botão de análise
+        const analyzeButton = document.getElementById('analyzeButton');
+        if (analyzeButton) {
+            analyzeButton.addEventListener('click', () => this.iniciarAnalise());
+            console.log('✅ Botão de análise configurado');
+        } else {
+            console.error('❌ Botão de análise não encontrado!');
+        }
     }
 
     setupTabs() {
         const tabButtons = document.querySelectorAll('.tab-btn');
+        console.log(`📑 Encontradas ${tabButtons.length} abas`);
         
         tabButtons.forEach(button => {
             button.addEventListener('click', (e) => {
                 e.preventDefault();
                 const targetTab = button.getAttribute('data-tab');
+                console.log(`🔄 Mudando para aba: ${targetTab}`);
                 this.showTab(targetTab);
             });
         });
     }
 
-    // Função corrigida para mostrar abas
-    // Função corrigida para mostrar abas
     showTab(tabName) {
-        console.log('Tentando mostrar aba:', tabName);
+        console.log(`🎯 Mostrando aba: ${tabName}`);
         
         // Esconder todas as abas
         const tabPanes = document.querySelectorAll('.tab-pane');
@@ -63,14 +77,13 @@ class PDFAnalyzerApp {
             targetPane.classList.add('active');
             targetPane.style.display = 'block';
             
-            // Usar setTimeout para garantir que o display:block seja aplicado antes da transição
             setTimeout(() => {
                 targetPane.style.opacity = '1';
             }, 10);
             
-            console.log('Aba encontrada e ativada:', tabName);
+            console.log(`✅ Aba ${tabName} ativada`);
         } else {
-            console.error('Aba não encontrada:', tabName);
+            console.error(`❌ Aba ${tabName} não encontrada`);
         }
 
         // Ativar botão selecionado
@@ -78,16 +91,16 @@ class PDFAnalyzerApp {
         if (activeButton) {
             activeButton.classList.add('active');
         }
-
-        // Forçar redesenho para garantir que as transições funcionem
-        if (targetPane) {
-            targetPane.offsetHeight; // Trigger reflow
-        }
     }
 
     setupFileUploadHandlers() {
         const fileInput = document.getElementById('pdfUpload');
         const uploadArea = document.getElementById('fileUploadArea');
+        
+        if (!fileInput || !uploadArea) {
+            console.error('❌ Elementos de upload não encontrados');
+            return;
+        }
         
         fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
         
@@ -106,24 +119,39 @@ class PDFAnalyzerApp {
             uploadArea.classList.remove('dragover');
             this.handleFileDrop(e);
         });
+        
+        console.log('✅ Upload de arquivos configurado');
     }
 
     handleFileSelect(event) {
+        console.log('📁 Arquivos selecionados:', event.target.files);
         this.handleFiles(event.target.files);
     }
 
     handleFileDrop(event) {
         const files = event.dataTransfer.files;
+        console.log('📁 Arquivos arrastados:', files);
         this.handleFiles(files);
     }
 
     handleFiles(files) {
         const fileList = document.getElementById('fileList');
+        if (!fileList) {
+            console.error('❌ fileList não encontrado');
+            return;
+        }
+        
         fileList.innerHTML = '';
         
-        this.uploadedFiles = Array.from(files).filter(file => 
-            file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
-        );
+        this.uploadedFiles = Array.from(files).filter(file => {
+            const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+            if (!isPDF) {
+                console.warn(`⚠️ Arquivo ignorado (não é PDF): ${file.name}`);
+            }
+            return isPDF;
+        });
+        
+        console.log(`✅ ${this.uploadedFiles.length} arquivos PDF carregados`);
         
         if (this.uploadedFiles.length === 0 && files.length > 0) {
             this.showError('Por favor, selecione arquivos PDF válidos.');
@@ -143,7 +171,10 @@ class PDFAnalyzerApp {
 
     loadDefaultKeywords() {
         const keywordsInput = document.getElementById('keywordsInput');
-        keywordsInput.value = PALAVRAS_CHAVE_PADRAO.join('\n');
+        if (keywordsInput && window.PALAVRAS_CHAVE_PADRAO) {
+            keywordsInput.value = window.PALAVRAS_CHAVE_PADRAO.join('\n');
+            console.log('✅ Palavras-chave padrão carregadas');
+        }
     }
 
     populateStaticData() {
@@ -155,10 +186,15 @@ class PDFAnalyzerApp {
         const engineersDiv = document.getElementById('engenheiros');
         const engineersTable = document.getElementById('engineersTable');
         
+        if (!window.ENGENHEIROS_CREAS_FIXOS) {
+            console.error('❌ ENGENHEIROS_CREAS_FIXOS não definido');
+            return;
+        }
+        
         let engineersHTML = '';
         let tableHTML = '';
         
-        for (const [engenheiro, creas] of Object.entries(ENGENHEIROS_CREAS_FIXOS)) {
+        for (const [engenheiro, creas] of Object.entries(window.ENGENHEIROS_CREAS_FIXOS)) {
             engineersHTML += `<div class="engineer-item"><strong>${engenheiro}</strong>: ${creas.join(', ')}</div>`;
             tableHTML += `
                 <tr>
@@ -170,16 +206,23 @@ class PDFAnalyzerApp {
         
         if (engineersDiv) engineersDiv.innerHTML = engineersHTML;
         if (engineersTable) engineersTable.innerHTML = tableHTML;
+        
+        console.log('✅ Dados dos engenheiros carregados');
     }
 
     populateProjectsData() {
         const projectsDiv = document.getElementById('projetos');
         const projectsTable = document.getElementById('projectsTable');
         
+        if (!window.MAPEAMENTO_PROJETOS) {
+            console.error('❌ MAPEAMENTO_PROJETOS não definido');
+            return;
+        }
+        
         let projectsHTML = '';
         let tableHTML = '';
         
-        for (const [codigo, descricao] of Object.entries(MAPEAMENTO_PROJETOS)) {
+        for (const [codigo, descricao] of Object.entries(window.MAPEAMENTO_PROJETOS)) {
             projectsHTML += `<div class="project-item"><strong>${codigo}</strong>: ${descricao}</div>`;
             tableHTML += `
                 <tr>
@@ -191,6 +234,8 @@ class PDFAnalyzerApp {
         
         if (projectsDiv) projectsDiv.innerHTML = projectsHTML;
         if (projectsTable) projectsTable.innerHTML = tableHTML;
+        
+        console.log('✅ Dados dos projetos carregados');
     }
 
     async iniciarAnalise() {
@@ -202,7 +247,7 @@ class PDFAnalyzerApp {
             this.showError('Por favor, selecione pelo menos um arquivo PDF.');
             return;
         }
-    
+
         this.showProgressArea();
         
         const keywordsInput = document.getElementById('keywordsInput');
@@ -240,6 +285,7 @@ class PDFAnalyzerApp {
             this.showError('Erro durante a análise: ' + error.message);
         }
     }
+
     mostrarResultados() {
         const resultsArea = document.getElementById('resultsArea');
         if (resultsArea) {
@@ -313,7 +359,7 @@ class PDFAnalyzerApp {
         
         for (const dados of Object.values(this.resultados)) {
             for (const palavra of dados.dados_carimbo) {
-                for (const [engenheiro, creas] of Object.entries(ENGENHEIROS_CREAS_FIXOS)) {
+                for (const [engenheiro, creas] of Object.entries(window.ENGENHEIROS_CREAS_FIXOS)) {
                     if (palavra === engenheiro || creas.includes(palavra)) {
                         engenheirosEncontrados[engenheiro] = (engenheirosEncontrados[engenheiro] || 0) + 1;
                     }
@@ -375,14 +421,15 @@ class PDFAnalyzerApp {
         }
 
         const success = this.excelGenerator.baixarExcel(this.resultados, "resultados_analise.xlsx");
-        if (!success) {
+        if (success) {
+            console.log('✅ Excel baixado com sucesso');
+        } else {
             this.showError('Erro ao gerar arquivo Excel.');
         }
     }
 
     // Utilitários de interface
     showProgressArea() {
-        this.hideElement('instructions');
         this.hideElement('resultsArea');
         this.showElement('progressArea');
     }
@@ -417,7 +464,7 @@ class PDFAnalyzerApp {
     }
 
     showSuccess(message) {
-        console.log('Sucesso: ' + message);
+        alert(message);
     }
 
     formatFileSize(bytes) {
@@ -440,20 +487,17 @@ function toggleExpand(elementId) {
 function iniciarAnalise() {
     if (window.pdfAnalyzerApp) {
         window.pdfAnalyzerApp.iniciarAnalise();
+    } else {
+        console.error('❌ pdfAnalyzerApp não está definido');
+        alert('Erro: A aplicação não foi carregada corretamente. Recarregue a página.');
     }
 }
 
 function baixarExcel() {
     if (window.pdfAnalyzerApp) {
         window.pdfAnalyzerApp.baixarExcel();
+    } else {
+        console.error('❌ pdfAnalyzerApp não está definido');
+        alert('Erro: A aplicação não foi carregada corretamente.');
     }
 }
-
-// Inicializar aplicação quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', () => {
-    window.pdfAnalyzerApp = new PDFAnalyzerApp();
-    
-    // Debug: Verificar se as abas estão funcionando
-    console.log('Aplicação inicializada. Abas devem estar funcionando.');
-
-});
