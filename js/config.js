@@ -41,22 +41,16 @@ window.MAPEAMENTO_PROJETOS = {
 };
 
 window.PALAVRAS_CHAVE_PADRAO = [
-    "IPER",
-    "CONSTRUÇÃO DA SEDE DO INSTITUTO DE PREVIDÊNCIA DO ESTADO",
-    "DE RORAIMA - IPER",
-    "AGOSTO",
-    "2025",
-    "RUA",
-    "CC-22",
-    "LOTE: 712 - REM.", 
-    "LAURA MOREIRA",
-    "69318-105",
-    "BOA VISTA",
-    "RR",
-    "2.220,32",
-    "2.654,11",
-    "SAUDE",
-    "SAÚDE"
+    "SEINF",
+    "CONSTRUÇÃO DO PRÉDIO DA PROCURADORIA GERAL DO ESTADO DE",
+    "AV. BENJAMIN CONSTANT, LOTE: 177 - DESD., BAIRRO: SÃO PEDRO,",
+    "BOA VISTA - RORAIMA, CEP: 69306-695",
+    "Av. Getúlio Vargas, Nº 3941,",
+    "Canarinho",
+    "CEP: 69.306-700 - Boa Vista/RR",
+    "SETEMBRO", 
+    "3.602,31",
+    "6.773,73",
 ];
 
 // Criar lista FIXA de palavras-chave dos engenheiros (sempre serão pesquisadas)
@@ -74,5 +68,6 @@ console.log('✅ Configurações carregadas:', {
     projetos: Object.keys(window.MAPEAMENTO_PROJETOS).length,
     palavrasChave: window.PALAVRAS_CHAVE_ENGENHEIROS.length
 });
+
 
 
