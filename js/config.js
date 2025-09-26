@@ -19,7 +19,7 @@ window.MAPEAMENTO_PROJETOS = {
     "ALI": "PROJETO ELÉTRICO DE BAIXA",
     "TUG": "PROJETO ELÉTRICO DE TOMADAS",
     "ILU": "PROJETO ELÉTRICO DE ILUMINAÇÃO",
-    "EME": "PROJETO ELÉTRICO DE ILUMINAÇÃO",
+    "EME": "PROJETO ELÉTRICO DE EMERGÊNCIA",
     "FOT": "PROJETO ELÉTRICO FOTOVOLTAICO",
     "LEV": "LEVANTAMENTO TOPOGRÁFICO",
     "EST": "ESTRUTURA DE CONCRETO ARMADO",
@@ -74,4 +74,5 @@ console.log('✅ Configurações carregadas:', {
     projetos: Object.keys(window.MAPEAMENTO_PROJETOS).length,
     palavrasChave: window.PALAVRAS_CHAVE_ENGENHEIROS.length
 });
+
 
