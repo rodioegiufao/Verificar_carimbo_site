@@ -148,7 +148,15 @@
                         </div>
 
                         <!-- Área de Resultados (inicialmente oculta) -->
+                        <!-- Área de Resultados (inicialmente oculta) -->
                         <div id="resultsArea" class="hidden">
+                            <!-- BOTÃO DE DOWNLOAD NO TOPO -->
+                            <div class="download-section">
+                                <button type="button" id="downloadButton" class="download-btn" onclick="window.pdfAnalyzerApp.baixarExcel()">
+                                    📥 Baixar Resultados em Excel
+                                </button>
+                            </div>
+                        
                             <!-- Resultados da Análise -->
                             <div class="results-card">
                                 <h3>Resultados da Análise</h3>
@@ -172,7 +180,7 @@
                                     </table>
                                 </div>
                             </div>
-
+                        
                             <!-- Estatísticas -->
                             <div class="stats-card">
                                 <h3>Estatísticas</h3>
@@ -199,7 +207,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                        
                             <!-- Engenheiros Encontrados -->
                             <div class="results-card">
                                 <h3>Engenheiros Encontrados</h3>
@@ -207,7 +215,7 @@
                                     <!-- Preenchido via JavaScript -->
                                 </div>
                             </div>
-
+                        
                             <!-- Detalhamento dos Projetos -->
                             <div class="results-card">
                                 <h3>Detalhamento dos Projetos</h3>
@@ -215,13 +223,8 @@
                                     <!-- Preenchido via JavaScript -->
                                 </div>
                             </div>
-
-                            <!-- Botão Download -->
-                            <div class="download-section">
-                                <button type="button" id="downloadButton" class="download-btn" onclick="baixarExcel()">
-                                    📥 Baixar Resultados em Excel
-                                </button>
-                            </div>
+                        
+                            <!-- REMOVER A SEÇÃO DE DOWNLOAD DO FINAL -->
                         </div>
 
                         <!-- Progress Bar -->
@@ -339,3 +342,4 @@
     </script>
 </body>
 </html>
+
