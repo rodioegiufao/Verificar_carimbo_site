@@ -14,7 +14,7 @@ class PDFAnalyzerApp {
         this.setupEventListeners();
         this.loadDefaultKeywords();
         this.populateStaticData();
-        this.setupFileUpload();
+        // REMOVER: this.setupFileUpload() - não existe mais
         
         // Garantir que a aba correta esteja visível
         this.showTab('analisador');
@@ -37,6 +37,13 @@ class PDFAnalyzerApp {
             console.log('✅ Botão de análise configurado');
         } else {
             console.error('❌ Botão de análise não encontrado!');
+        }
+
+        // Configurar botão de download
+        const downloadButton = document.getElementById('downloadButton');
+        if (downloadButton) {
+            downloadButton.addEventListener('click', () => this.baixarExcel());
+            console.log('✅ Botão de download configurado');
         }
     }
 
@@ -476,28 +483,11 @@ class PDFAnalyzerApp {
     }
 }
 
-// Funções globais para interface com o HTML
+// REMOVER funções globais antigas - agora usamos métodos da classe
+// Deixar apenas toggleExpand que é usado no HTML
 function toggleExpand(elementId) {
     const element = document.getElementById(elementId);
     if (element) {
         element.classList.toggle('show');
-    }
-}
-
-function iniciarAnalise() {
-    if (window.pdfAnalyzerApp) {
-        window.pdfAnalyzerApp.iniciarAnalise();
-    } else {
-        console.error('❌ pdfAnalyzerApp não está definido');
-        alert('Erro: A aplicação não foi carregada corretamente. Recarregue a página.');
-    }
-}
-
-function baixarExcel() {
-    if (window.pdfAnalyzerApp) {
-        window.pdfAnalyzerApp.baixarExcel();
-    } else {
-        console.error('❌ pdfAnalyzerApp não está definido');
-        alert('Erro: A aplicação não foi carregada corretamente.');
     }
 }
