@@ -695,23 +695,61 @@ body {
 }
 
 /* Estilos para conteúdo expandível */
+/* Melhorar o conteúdo expansível com scroll */
 .expand-content {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+    margin-top: 0.5rem;
 }
 
 .expand-content.show {
-    max-height: 500px;
+    max-height: 300px; /* Altura máxima com scroll */
+    overflow-y: auto;
 }
 
+/* Estilo da barra de rolagem personalizada */
+.expand-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.expand-content::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+}
+
+.expand-content::-webkit-scrollbar-thumb {
+    background: var(--accent-blue);
+    border-radius: 4px;
+}
+
+.expand-content::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-light);
+}
+
+/* Aumentar a altura máxima para o mapeamento de projetos que tem mais itens */
+#projetos.expand-content {
+    max-height: 400px; /* Mais alto para projetos */
+}
+
+/* Estilo dos itens dentro do conteúdo expansível */
 .engineer-item, .project-item {
-    padding: 0.5rem 0;
+    padding: 0.75rem;
     border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    line-height: 1.4;
 }
 
 .engineer-item:last-child, .project-item:last-child {
     border-bottom: none;
-
 }
+
+.engineer-item strong, .project-item strong {
+    color: var(--accent-light);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
 
