@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analisador de Carimbos PDF</title>
     <link rel="stylesheet" href="styles/main.css">
-    <!-- CORREÇÃO: Usar versão compatível do PDF.js -->
+    <!-- Usar versão compatível do PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -322,11 +322,6 @@
     <script src="js/pdf-processor.js"></script>
     <script src="js/excel-generator.js"></script>
     <script src="js/app.js"></script>
-    
-    <!-- CORREÇÃO: Script adicional para configurar PDF.js -->
-    <script>
-        // Configurar o worker do PDF.js
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    </script>
+    <script src="js/main.js"></script> <!-- Novo arquivo de inicialização -->
 </body>
 </html>
