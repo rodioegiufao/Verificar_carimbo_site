@@ -317,11 +317,25 @@
         <footer class="footer">
             <p>Desenvolvido por Rodrigo Damasceno | © 2025 - Todos os direitos reservados</p>
         </footer>
-    </div>
+    <!-- ORDEM CORRETA DE CARREGAMENTO -->
     <script src="js/config.js"></script>
     <script src="js/pdf-processor.js"></script>
     <script src="js/excel-generator.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/main.js"></script> <!-- Novo arquivo de inicialização -->
+    
+    <!-- Script de inicialização -->
+    <script>
+        // Configurar PDF.js
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+
+        // Inicializar quando o DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicializando aplicação...');
+            window.pdfAnalyzerApp = new PDFAnalyzerApp();
+            console.log('✅ Aplicação carregada com sucesso');
+        });
+    </script>
 </body>
 </html>
