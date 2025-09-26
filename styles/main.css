@@ -456,10 +456,14 @@ body {
     border-left: 4px solid var(--success);
 }
 
-/* Download */
+/* Estilo para o botão de download no topo */
 .download-section {
     text-align: center;
-    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(72, 187, 120, 0.1);
+    border-radius: 12px;
+    border: 2px dashed var(--success);
 }
 
 .download-btn {
@@ -472,11 +476,16 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
 }
 
 .download-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+}
+
+.download-btn:active {
+    transform: translateY(0);
 }
 
 /* Progress */
@@ -674,4 +683,5 @@ body {
 
 .engineer-item:last-child, .project-item:last-child {
     border-bottom: none;
+
 }
