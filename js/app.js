@@ -298,6 +298,9 @@ class PDFAnalyzerApp {
         if (resultsArea) {
             resultsArea.classList.remove('hidden');
             
+            // Mover o botão de download para o topo
+            this.moverBotaoDownloadParaTopo();
+            
             this.preencherTabelaResultados();
             this.atualizarEstatisticas();
             this.mostrarEngenheirosEncontrados();
@@ -305,6 +308,17 @@ class PDFAnalyzerApp {
             
             // Scroll para os resultados
             resultsArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+    
+    // Novo método para mover o botão de download para o topo
+    moverBotaoDownloadParaTopo() {
+        const downloadSection = document.querySelector('.download-section');
+        const resultsCard = document.querySelector('.results-card');
+        
+        if (downloadSection && resultsCard) {
+            // Mover a seção de download para antes da primeira results-card
+            resultsCard.parentNode.insertBefore(downloadSection, resultsCard);
         }
     }
 
@@ -491,3 +505,4 @@ function toggleExpand(elementId) {
         element.classList.toggle('show');
     }
 }
+
