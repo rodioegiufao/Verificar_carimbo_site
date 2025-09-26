@@ -3,20 +3,9 @@ class PDFProcessor {
     constructor() {
         this.pdfjsLib = window['pdfjsLib'];
         // Configurar o worker se não estiver configurado
-        if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        if (this.pdfjsLib && !this.pdfjsLib.GlobalWorkerOptions.workerSrc) {
+            this.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         }
-    }
-
-    // CORREÇÃO: Adicionar validação de arquivo
-    validarArquivoPDF(file) {
-        if (!file) {
-            throw new Error('Arquivo não selecionado');
-        }
-        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-            throw new Error('O arquivo não é um PDF válido');
-        }
-        return true;
     }
 
     // Função para extrair o número da prancha do nome do arquivo
@@ -62,12 +51,9 @@ class PDFProcessor {
         }
     }
 
-    // CORREÇÃO: Processar arquivo PDF com melhor tratamento de erro
+    // CORREÇÃO: Usar window.MAPEAMENTO_PROJETOS
     async processarPDF(file, palavrasChave, opcoes) {
         try {
-            // Validar arquivo
-            this.validarArquivoPDF(file);
-
             const {
                 checkFilename = true,
                 checkSheetNumber = true,
@@ -80,7 +66,11 @@ class PDFProcessor {
             const nomeSemAssinado = nomeArquivo.replace(/_assinado/i, '');
             const numeroPrancha = this.extrairNumeroPrancha(file.name);
             const codigoProjeto = this.extrairCodigoProjeto(file.name);
-            const descricaoProjeto = window.MAPEAMENTO_PROJETOS[codigoProjeto] || 'Desconhecido';
+            
+            // CORREÇÃO: Usar window.MAPEAMENTO_PROJETOS
+            const descricaoProjeto = window.MAPEAMENTO_PROJETOS && window.MAPEAMENTO_PROJETOS[codigoProjeto] 
+                ? window.MAPEAMENTO_PROJETOS[codigoProjeto] 
+                : 'Desconhecido';
 
             // Inicializar resultados
             const dadosCarimbo = [];
@@ -122,7 +112,7 @@ class PDFProcessor {
                     }
                 }
                 
-                // Verificar palavras-chave FIXAS dos engenheiros
+                // CORREÇÃO: Usar window.PALAVRAS_CHAVE_ENGENHEIROS
                 if (window.PALAVRAS_CHAVE_ENGENHEIROS) {
                     for (const palavra of window.PALAVRAS_CHAVE_ENGENHEIROS) {
                         if (textoExtraido.includes(palavra) && !dadosCarimbo.includes(palavra)) {
@@ -158,7 +148,6 @@ class PDFProcessor {
         }
     }
 
-    // CORREÇÃO: Processar múltiplos PDFs com melhor tratamento
     async processarMultiplosPDFs(files, palavrasChaveAdicionais, opcoes, onProgress) {
         const resultados = {};
         
@@ -167,6 +156,7 @@ class PDFProcessor {
             throw new Error('Nenhum arquivo PDF selecionado');
         }
 
+        // CORREÇÃO: Usar window.PALAVRAS_CHAVE_ENGENHEIROS
         const todasPalavrasChave = [
             ...(window.PALAVRAS_CHAVE_ENGENHEIROS || []), 
             ...palavrasChaveAdicionais
