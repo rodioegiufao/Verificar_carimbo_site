@@ -69,22 +69,51 @@ body {
 }
 
 /* Sidebar */
-.sidebar {
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    height: fit-content;
-    position: sticky;
-    top: 20px;
+.sidebar .form-group:has(.analyze-button) {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    border-top: 2px solid var(--border-color);
+    padding-top: 1.5rem;
 }
 
-.sidebar-section h3 {
-    color: var(--text-lighter);
-    margin-bottom: 1.5rem;
-    font-size: 1.3rem;
-    border-bottom: 2px solid var(--accent-blue);
-    padding-bottom: 0.5rem;
+.sidebar .analyze-button {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent-blue) 0%, #2c5aa0 100%);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0;
+    box-shadow: 0 4px 15px rgba(49, 130, 206, 0.3);
+}
+
+.sidebar .analyze-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(49, 130, 206, 0.4);
+}
+
+.sidebar .analyze-button:active {
+    transform: translateY(0);
+}
+
+/* Melhorar a aparência da área de upload */
+.file-upload-area {
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 1rem;
+}
+
+.file-upload-area:hover {
+    border-color: var(--accent-blue);
+    background: rgba(255,255,255,0.08);
 }
 
 /* Upload Area */
@@ -685,3 +714,4 @@ body {
     border-bottom: none;
 
 }
+
