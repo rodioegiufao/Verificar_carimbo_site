@@ -194,11 +194,15 @@ class PDFAnalyzerApp {
     }
 
     async iniciarAnalise() {
+        console.log('🔄 Iniciando análise...');
+        console.log('Arquivos carregados:', this.uploadedFiles);
+        
         if (this.uploadedFiles.length === 0) {
+            console.error('❌ Nenhum arquivo selecionado');
             this.showError('Por favor, selecione pelo menos um arquivo PDF.');
             return;
         }
-
+    
         this.showProgressArea();
         
         const keywordsInput = document.getElementById('keywordsInput');
@@ -206,13 +210,18 @@ class PDFAnalyzerApp {
             .map(line => line.trim())
             .filter(line => line.length > 0);
         
+        console.log('Palavras-chave adicionais:', palavrasChaveAdicionais);
+        
         const opcoes = {
             checkFilename: document.getElementById('checkFilename').checked,
             checkSheetNumber: document.getElementById('checkSheetNumber').checked,
             checkProjeto: document.getElementById('checkProjeto').checked
         };
         
+        console.log('Opções:', opcoes);
+        
         try {
+            console.log('📊 Processando PDFs...');
             this.resultados = await this.pdfProcessor.processarMultiplosPDFs(
                 this.uploadedFiles,
                 palavrasChaveAdicionais,
@@ -220,16 +229,17 @@ class PDFAnalyzerApp {
                 (current, total, fileName) => this.updateProgress(current, total, fileName)
             );
             
+            console.log('✅ Análise concluída. Resultados:', this.resultados);
             this.hideProgressArea();
             this.mostrarResultados();
             this.showSuccess('Análise concluída com sucesso! ✅');
             
         } catch (error) {
+            console.error('❌ Erro durante a análise:', error);
             this.hideProgressArea();
             this.showError('Erro durante a análise: ' + error.message);
         }
     }
-
     mostrarResultados() {
         const resultsArea = document.getElementById('resultsArea');
         if (resultsArea) {
@@ -445,4 +455,5 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Debug: Verificar se as abas estão funcionando
     console.log('Aplicação inicializada. Abas devem estar funcionando.');
+
 });
