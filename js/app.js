@@ -397,7 +397,7 @@ class PDFAnalyzerApp {
         for (const [engenheiro, count] of Object.entries(engenheirosEncontrados)) {
             html += `
                 <div class="found-item">
-                    <strong>${engenheiro}</strong>: encontrado em ${count} arquivo(s)
+                    <strong>${engenheiro}</strong>: encontrado ${count} veze(s)
                 </div>
             `;
         }
@@ -505,4 +505,5 @@ function toggleExpand(elementId) {
         element.classList.toggle('show');
     }
 }
+
 
