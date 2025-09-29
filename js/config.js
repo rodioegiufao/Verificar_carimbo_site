@@ -16,7 +16,7 @@ window.MAPEAMENTO_PROJETOS = {
     "SUB": "PROJETO DE SUBESTAÇÃO",
     "SPDA": "PROJETO DE SPDA",
     "TEF": "PROJETO DE TELEFONIA",
-    "ALI": "PROJETO ELÉTRICO DE BAIXA",
+    "ALI": "PROJETO DE ALIMENTADORES",
     "TUG": "PROJETO ELÉTRICO DE TOMADAS",
     "ILU": "PROJETO ELÉTRICO DE ILUMINAÇÃO",
     "EME": "PROJETO ELÉTRICO DE EMERGÊNCIA",
@@ -68,6 +68,7 @@ console.log('✅ Configurações carregadas:', {
     projetos: Object.keys(window.MAPEAMENTO_PROJETOS).length,
     palavrasChave: window.PALAVRAS_CHAVE_ENGENHEIROS.length
 });
+
 
 
 
