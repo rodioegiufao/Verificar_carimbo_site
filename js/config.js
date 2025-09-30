@@ -49,8 +49,14 @@ window.PALAVRAS_CHAVE_PADRAO = [
     "Canarinho",
     "CEP: 69.306-700 - Boa Vista/RR",
     "SETEMBRO", 
-    "3.602,31",
-    "6.773,73",
+    "5.488,41",
+    "2.085,40",
+    "8.942,32",
+    "6.436,83",
+    "2.088,85",
+    "2.387,93",
+    "2.091,02",
+    "3.557,36",
 ];
 
 // Criar lista FIXA de palavras-chave dos engenheiros (sempre serão pesquisadas)
@@ -68,6 +74,7 @@ console.log('✅ Configurações carregadas:', {
     projetos: Object.keys(window.MAPEAMENTO_PROJETOS).length,
     palavrasChave: window.PALAVRAS_CHAVE_ENGENHEIROS.length
 });
+
 
 
 
