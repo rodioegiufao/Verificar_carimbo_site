@@ -1,8 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/analisar_carimbo",
-      "destination": "/index.html"
+      "source": "/",
+      "destination": "/analisador_carimbo.html"
+    },
+    {
+      "source": "/analisador_carimbo",
+      "destination": "/analisador_carimbo.html"
     }
   ]
 }
