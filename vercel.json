@@ -1,9 +1,8 @@
 {
-  "redirects": [
+  "rewrites": [
     {
-      "source": "/",
-      "destination": "/analisar_carimbo",
-      "permanent": true
+      "source": "/analisar_carimbo",
+      "destination": "/index.html"
     }
   ]
 }
